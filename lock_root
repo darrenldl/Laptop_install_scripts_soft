@@ -1,0 +1,30 @@
+@COMMAND
+echo "Locking root"
+echo "Emptying /etc/securetty"
+echo "" > /etc/securetty
+echo "Locking root via passwd"
+echo "command: passwd -l root"
+passwd -l root
+<END
+
+@CHMOD o=
+/usr/bin/passwd
+<END
+
+@COMMAND
+echo "Disabling login shell"
+<END
+
+@REPLACE
+root:x:0:0:root:/root:/.*
+@WITH
+root:x:0:0:root:/root:/sbin/nologin
+>START
+/etc/passwd
+<END
+
+@COMMAND
+echo "Root locked"
+<END
+
+####

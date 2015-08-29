@@ -1,0 +1,315 @@
+@COMMAND
+echo "Applying protections"
+<END
+
+@CHATTR RECUR +i
+#/var/cache/pacman
+#/var/lib/iptables
+#/var/lib/ip6tables
+/boot
+/root
+<END
+
+#@CHATTR +i
+#/
+#/usr/bin/\*
+#/home
+#/etc/profile
+#/etc/pam.d/
+#/etc/pacman.d/
+#/etc/pacman.conf
+#/etc/securetty
+#/etc/security
+#/etc/shells
+#/etc/sudoers
+#/etc/sudoers.d
+#/etc/xinetd.d
+#/etc/fstab
+#/etc/crypttab
+#/etc/cups
+#/etc/mtab
+#/etc/issue
+#/etc/*-release
+#/etc/iptables/
+#/etc/shadow
+#/etc/gshadow
+#/etc/group
+#/etc/sudoers
+#/etc/host.conf
+#/etc/colord.conf
+#/etc/mdadm.conf
+#/etc/logrotate.conf
+#/etc/gai.conf
+#/etc/ca-certificates.conf
+#/etc/mtools.conf
+#/etc/mkinitcpio.conf
+#/etc/fuse.conf
+#/etc/makepkg.conf
+#/etc/slim.conf
+#/etc/cron.*
+#/etc/anacrontab
+#/etc/login.defs
+#/etc/dhcpcd.conf
+#/etc/dhcpcd.duid
+#/etc/drbl
+#/etc/inetd.\*
+#/etc/xinetd.\*
+#<END
+
+@COMMAND
+echo "Applying trivial protection"
+<END
+
+@CHOWN USER root GROUP root
+/etc/passwd
+/etc/shadow
+/etc/group
+/etc/fstab
+<END
+
+@CHMOD u=rwx,g=rx,o=rx
+/etc/fstab
+/etc/passwd
+/etc/group
+<END
+
+@CHMOD u=rx,g=rx,o=rx
+/etc/shadow
+<END
+
+@COMMAND
+rm -f /etc/cron.deny
+rm -f /etc/at.deny
+echo "root" > cron.allow
+echo "root" > at.allow
+<END
+
+@CHOWN USER root GROUP root
+/etc/cron.allow
+/etc/at.allow
+<END
+
+@CHMOD u=rx,g=rx,o=rx
+/etc/cron.allow
+/etc/at.allow
+<END
+
+@CHATTR +i
+/etc/cron.allow
+/etc/at.allow
+<END
+
+@COMMAND
+echo "Trivial protections applied"
+sleep 1
+clear
+echo "Applying ACL for files"
+<END
+
+@CHMOD o=
+/usr/bin/passwd
+<END
+
+@NAME_LIST USR TEXT
+>START
+dummy
+<END
+
+@RESTRICT USER dummy
++PERM ---
+>START
+# Deny changes to system
+/usr/bin/chattr
+/usr/bin/chgpasswd
+/usr/bin/chpasswd
+/usr/bin/passwd
+/usr/bin/gpasswd
+/usr/bin/chage
+/usr/bin/chsh
+/usr/bin/chfn
+/usr/bin/crond
+/usr/bin/groupadd
+/usr/bin/groupdel
+/usr/bin/groupmod
+/usr/bin/useradd
+/usr/bin/userdel
+/usr/bin/usermod
+/usr/bin/newgrp
+/usr/bin/gradm
+/usr/bin/paxctl
+/usr/bin/linux-pax-flags
+/usr/bin/setfacl
+/dev/sda
+/dev/mapper/croot
+# Deny info gathering
+/usr/bin/getfacl
+/usr/bin/lsattr
+/usr/bin/dmesg
+/usr/bin/systemctl
+/usr/bin/xtables-multi
+/usr/bin/kmod
+/usr/bin/mount
+/usr/bin/systemd-analyze
+/usr/bin/pinky
+/usr/bin/finger
+/usr/bin/users
+/usr/bin/who
+/usr/bin/w
+/usr/bin/last
+/usr/bin/lastlog
+/usr/bin/expiry
+/usr/bin/lsof
+/usr/bin/ps
+/usr/bin/top
+/usr/bin/pacman
+#/usr/bin/which
+/usr/bin/uname
+/usr/bin/df
+/usr/bin/netstat
+/usr/bin/ss
+/etc/pam.d/
+/etc/pacman.d/
+/etc/pacman.conf
+/etc/securetty
+/etc/security
+/etc/shells
+/etc/sudoers
+/etc/sudoers.d
+/etc/xinetd.d
+/etc/fstab
+/etc/crypttab
+/etc/cups
+/etc/mtab
+/etc/issue
+/etc/*-release
+/etc/iptables/
+/etc/shadow
+/etc/gshadow
+/etc/group
+/etc/sudoers
+/etc/host.conf
+/etc/colord.conf
+/etc/mdadm.conf
+/etc/logrotate.conf
+/etc/gai.conf
+/etc/ca-certificates.conf
+/etc/mtools.conf
+/etc/mkinitcpio.conf
+/etc/fuse.conf
+/etc/makepkg.conf
+#/etc/slim.conf
+/etc/cron.*
+/etc/anacrontab
+/etc/login.defs
+/etc/dhcpcd.conf
+/etc/dhcpcd.duid
+/etc/drbl
+/etc/inetd.*
+/etc/xinetd.*
+#/var/log/
+#/var/spool/
+#/var/cache/pacman
+#/var/db/
+#/var/lib/pacman/
+#/var/lib/iptables
+#/var/lib/ip6tables
+#/var/lib/systemd
+/boot
+# Deny privilege escalation
+/usr/bin/su
+/usr/bin/sudo
+/usr/bin/ksu
+# Deny unnecessary commands
+#/usr/bin/sshd
+/usr/bin/hwclock
+/usr/bin/ntp-keygen
+/usr/bin/ntp-wait
+/usr/bin/ntpd
+/usr/bin/ntpdate
+/usr/bin/ntpdc
+/usr/bin/ntpq
+/usr/bin/ntptime
+/usr/bin/ntptrace
+/usr/bin/sntp
+/usr/bin/tickadj
+/usr/bin/lua
+/usr/bin/c++
+/usr/bin/c89
+/usr/bin/c99
+/usr/bin/cc
+/usr/bin/cpp
+/usr/bin/g++
+/usr/bin/gcc
+/usr/bin/gcc-ar
+/usr/bin/gcc-nm
+/usr/bin/gcc-ranlib
+/usr/bin/gcov
+/usr/bin/make
+/usr/bin/makepkg
+/usr/bin/x86_64-unknown-linux-gnu-c++
+/usr/bin/x86_64-unknown-linux-gnu-g++
+/usr/bin/x86_64-unknown-linux-gnu-gcc
+/usr/bin/x86_64-unknown-linux-gnu-gcc-4.8.2
+/usr/bin/x86_64-unknown-linux-gnu-gcc-ar
+/usr/bin/x86_64-unknown-linux-gnu-gcc-nm
+/usr/bin/x86_64-unknown-linux-gnu-gcc-ranlib
+/usr/bin/unix_chkpwd
+/usr/bin/gradm_pam
+/usr/bin/gradm
+/usr/bin/mkswap
+/usr/bin/ss
+/usr/bin/crontab
+#/usr/bin/perl
+#/usr/bin/python
+#/usr/bin/ruby
+/usr/bin/crond
+/usr/bin/rlogind
+/usr/bin/rmmod
+/usr/bin/rsh
+/usr/bin/rcp
+/usr/bin/rlogin
+/usr/bin/rshd
+/usr/bin/talkd
+/usr/bin/telnetd
+/usr/bin/tftpd
+/usr/bin/sysctl
+/usr/bin/pkexec
+/usr/bin/sg
+<END
+
+@COMMAND
+echo "ACL applied"
+echo "Applying protection of user files"
+<END
+
+#@CHOWN USER root GROUP root
+#/home/dummy/.xprofile
+#/home/dummy/.bash_profile
+#/home/dummy/.bash_logout
+#/home/dummy/.bashrc
+#/home/dummy/.xsession
+#<END
+
+#@CHMOD o=rx
+#/home/dummy/.xprofile
+#/home/dummy/.bash_profile
+#/home/dummy/.bash_logout
+#/home/dummy/.bashrc
+#/home/dummy/.xsession
+#<END
+
+#@CHATTR +i
+#/home/dummy/.xprofile
+#/home/dummy/.bash_profile
+#/home/dummy/.bash_logout
+#/home/dummy/.bashrc
+#/home/dummy/.xsession
+#<END
+
+@COMMAND
+echo "All protections applied"
+sleep 1
+clear
+<END
+
+####

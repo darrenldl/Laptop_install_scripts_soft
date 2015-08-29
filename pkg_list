@@ -1,0 +1,8 @@
+dnsutils networkmanager network-manager-applet xfce4-notifyd
+aide
+xorg xfce4 xfce4-goodies
+firefox
+mtools dosfstools efibootmgr xscreensaver
+udevil cpupower
+ttf-dejavu
+checksec paxtest pax-utils paxd

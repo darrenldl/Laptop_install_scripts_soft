@@ -1,0 +1,234 @@
+@COMMAND
+clear
+echo "Hello, welcome to automated installation"
+echo "Please note that this is for :"
+echo "Arch linux Laptop, single user, with two factor LUKs authentication"
+echo "This install scripts set includes hardened configurations"
+echo ""
+echo "Press enter to continue"
+read
+clear
+echo "This install scripts set requires internet connection"
+echo "Please connect to the internet then press enter to continue"
+read
+<END
+
+@COMMAND
+clear
+./ezsetfacl.sh --tea
+sleep 2
+<END
+
+@COMMAND
+clear
+echo "This script assumes:"
+echo "You intend to use the following setup"
+echo "Plain Laptop"
+echo ""
+echo "You have plugged in the storage devices required"
+echo "You already have a boot partition and a main partition created on laptop for Linux"
+echo "Press enter to continue"
+read
+clear
+echo "This script requires you to:"
+echo 'Enter the boot partition name (e.g. /dev/sda1) on laptop when it prompts so'
+echo 'Enter the main partition name (e.g. /dev/sda4) on laptop when it prompts so'
+echo "(This script will obtain the UUID for operations required automatically)"
+echo "Press enter to continue"
+read
+clear
+echo "The following dialogue will ask for your device/partition name"
+echo "Please check if you have entered the correct one"
+echo "The data previously stored will not be backed up"
+echo "Press enter to continue"
+read
+i=0
+ans=""
+while (( $i == 0 )); do
+	i=1
+	echo -n "Please enter laptop boot partition name: "
+	read BOOT_PART_NAME
+	if [[ $BOOT_PART_NAME == "" ]]; then
+		echo "Please enter a non-empty name"
+		i=0
+		continue
+	fi
+	if [ ! -b $BOOT_PART_NAME ]; then
+		echo "Device does not exist"
+		i=0
+		continue
+	fi
+	echo "You entered: $BOOT_PART_NAME"
+	echo "Is it correct? yes/no"
+	read ans
+	if [[ $ans != "yes" ]]; then
+		i=0
+		continue
+	fi
+done
+echo ""
+i=0
+ans=""
+while (( $i == 0 )); do
+	i=1
+	echo -n "Please enter laptop main partition name: "
+	read MAIN_PART_NAME
+	if [[ $MAIN_PART_NAME == "" ]]; then
+		echo "Please enter a non-empty name"
+		i=0
+		continue
+	fi
+	if [ ! -b $MAIN_PART_NAME ]; then
+		echo "Device does not exist"
+		i=0
+		continue
+	fi
+	echo "You entered: $MAIN_PART_NAME"
+	echo "Is it correct? yes/no"
+	read ans
+	if [[ $ans != "yes" ]]; then
+		i=0
+		continue
+	fi
+done
+echo ""
+echo "Partitioning completed"
+sleep 5
+clear
+echo "Laptop boot partition will not be formatted"
+echo ""
+echo "Formatting laptop main partition"
+echo "command: mkfs.ext4 $MAIN_PART_NAME"
+mkfs.ext4 $MAIN_PART_NAME
+echo "Mounting laptop main partition to /mnt"
+echo "command: mount $MAIN_PART_NAME /mnt"
+mount $MAIN_PART_NAME /mnt
+echo "Mounted main partition to /mnt"
+echo ""
+echo "Creating /mnt/boot"
+mkdir /mnt/boot
+echo "Mounting laptop boot partition to /mnt/boot"
+echo "command: mount $BOOT_PART_NAME /mnt/boot"
+mount $BOOT_PART_NAME /mnt/boot
+echo ""
+echo "Mounted boot partition to /mnt/boot"
+echo ""
+echo "Press enter to continue"
+read
+#sleep 5
+clear
+echo 'Now installing Archlinux system (base base-devel)'
+i=0
+a=0
+while (( $i == 0 )); do
+	i=1
+	if (( $a == 0 )); then
+		echo "Do you want to edit pacman mirrorlist? yes/no"
+		a=1
+	else
+		echo "Do you want to continue editing pacman mirrorlist? yes/no"
+	fi
+	read ans
+	if [[ $ans != "no" ]]; then
+		i=0
+		nano /etc/pacman.d/mirrorlist
+		continue
+	fi
+done
+echo "Pacman mirrorlist edited"
+i=0
+while (( $i == 0 )); do
+	i=1
+	echo "command: pacstrap /mnt base base-devel"
+	pacstrap /mnt base base-devel
+	OUT=$?
+	if (( $OUT != 0 )); then
+		echo "Problem detected"
+		echo "Please fix the problem and press enter"
+		i=0
+		read
+	fi
+done
+echo "System installed"
+echo $MAIN_PART_NAME > /mnt/TEMP_MAIN_PART_NAME
+echo $BOOT_PART_NAME > /mnt/TEMP_BOOT_PART_NAME
+sleep 5
+clear
+echo "Generating fstab"
+echo "command: genfstab -pU /mnt >> /mnt/etc/fstab"
+genfstab -pU /mnt >> /mnt/etc/fstab
+sleep 5
+clear
+echo "command: mkdir /mnt/boot/efi"
+mkdir /mnt/boot/efi
+echo ""
+sleep 5
+clear
+echo "Copying files to /mnt"
+echo "Generating pro.sh"
+echo "command: ./ezsetfacl.sh -g pro > pro.sh"
+./ezsetfacl.sh -g pro > pro.sh
+echo "Copying pro.sh to /mnt"
+echo "command: cp pro.sh /mnt"
+cp pro.sh /mnt
+echo "command: chmod u+rwx /mnt/pro.sh"
+chmod u+rwx /mnt/pro.sh
+echo ""
+echo "Copying ezsetfacl.sh to /mnt"
+echo "command: cp ezsetfacl.sh /mnt"
+cp ezsetfacl.sh /mnt
+echo "command: chmod u+rwx /mnt/ezsetfacl.sh"
+chmod u+rwx /mnt/ezsetfacl.sh
+echo ""
+echo "Copying pkg_list to /mnt"
+echo "command: cp pkg_list /mnt"
+cp pkg_list /mnt
+echo ""
+echo "Copying pkg_install.sh to /mnt"
+echo "command: cp pkg_install.sh /mnt"
+cp pkg_install.sh /mnt
+echo ""
+echo "Copying lock_root to /mnt"
+echo "command: cp lock_root /mnt"
+cp lock_root /mnt
+echo "Copying lock to /mnt"
+echo "command: cp lock /mnt"
+cp lock /mnt
+echo ""
+echo "Copying lock_p to /mnt"
+echo "command: cp lock_p /mnt"
+cp lock_p /mnt
+echo "Copying unlock to /mnt"
+echo "cp unlock /mnt"
+cp unlock /mnt
+echo "Copying disable_firewire to /mnt"
+echo "cp disable_firewire /mnt"
+cp disable_firewire /mnt
+echo "All files are copied"
+sleep 5
+clear
+echo "Chrooting to system and executing pro.sh"
+echo "command: arch-chroot /mnt ./pro.sh"
+arch-chroot /mnt ./pro.sh
+sleep 5
+clear
+echo "Removing pro.sh"
+echo "command: rm /mnt/pro.sh"
+rm /mnt/pro.sh
+echo "Shut down system and unmount everything? yes/no"
+read ans
+if [[ $ans == "yes" ]]; then
+  echo "Unmounting /mnt"
+  echo "command: umount -R /mnt"
+  umount -R /mnt
+  echo ""
+	echo "Shutting down system"
+	echo "command: shutdown -h now"
+  shutdown -h now
+else
+	echo "Exiting pre.sh"
+	exit
+fi
+<END
+
+####
