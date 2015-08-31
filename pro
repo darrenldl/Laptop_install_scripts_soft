@@ -17,7 +17,7 @@ rm TEMP_BOOT_PART_NAME
 #echo "$BOOT_PART_NAME"
 DRIVE_NAME=$(echo $BOOT_PART_NAME | tr -d 0-9)
 #echo "$DRIVE_NAME"
-read
+#read
 <END
 
 @COMMAND
@@ -136,8 +136,8 @@ echo ""
 echo "Installing GRUB to Key device"
 if [ -d /sys/firmware/efi ]; then
 	echo "The system is using UEFI"
-	echo "command: grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub --recheck --removable"
-	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub --recheck --removable
+	echo "command: grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub --recheck"
+	grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub --recheck
 	echo "GRUB installed to boot partition"
 	echo "Generating GRUB config"
 	echo "command: grub-mkconfig -o /boot/efi/EFI/GRUB/grub.cfg"
@@ -399,6 +399,12 @@ echo "Removing lock_p"
 rm lock_p
 echo "Removing lock"
 rm lock
+echo "Removing pkg_install.sh"
+rm pkg_install.sh
+echo "Removing pkg_list"
+rm pkg_list
+echo "Removing ezsetfacl.sh"
+rm ezsetfacl.sh
 echo "Your Archlinux for laptop is now installed and essential configurations have been done"
 echo "All operations are finished, press enter to exit pro.sh and return to pre.sh"
 read

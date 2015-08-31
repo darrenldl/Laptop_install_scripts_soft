@@ -2,7 +2,7 @@
 clear
 echo "Hello, welcome to automated installation"
 echo "Please note that this is for :"
-echo "Arch linux Laptop, single user, with two factor LUKs authentication"
+echo "Arch linux Laptop, single user"
 echo "This install scripts set includes hardened configurations"
 echo ""
 echo "Press enter to continue"
@@ -25,8 +25,8 @@ echo "This script assumes:"
 echo "You intend to use the following setup"
 echo "Plain Laptop"
 echo ""
-echo "You have plugged in the storage devices required"
 echo "You already have a boot partition and a main partition created on laptop for Linux"
+echo ""
 echo "Press enter to continue"
 read
 clear
@@ -34,6 +34,21 @@ echo "This script requires you to:"
 echo 'Enter the boot partition name (e.g. /dev/sda1) on laptop when it prompts so'
 echo 'Enter the main partition name (e.g. /dev/sda4) on laptop when it prompts so'
 echo "(This script will obtain the UUID for operations required automatically)"
+echo ""
+echo "Press enter to continue"
+read
+clear
+echo "Please ensure that you have set up the boot partition properly(check the following list)"
+echo "Use GPT partition table for disk"
+echo "Marked boot partition with EFI System code"
+echo "command : sgdisk -t [n]:ef00 /dev/sd[p]"
+echo "    where [n] is the number assigned to the partition, and [p] is the partition name"
+echo "    Example : for /dev/sda1, command : sgdisk -t 1:ef00 /dev/sda"
+echo "Formatted the partition with FAT32 system"
+echo "command : mkfs.msdos -F 32 /dev/sd[p][n]"
+echo "    [n], [p] have same meaning as mentioned above"
+echo "    Example : for /dev/sda1, command : mkfs.msdos -F 32 /dev/sda1"
+echo ""
 echo "Press enter to continue"
 read
 clear

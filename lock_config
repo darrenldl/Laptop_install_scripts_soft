@@ -1,4 +1,3 @@
-
 @COMMAND
 echo "Configuring IPv4 and IPv6 firewall rules"
 # IPv4
