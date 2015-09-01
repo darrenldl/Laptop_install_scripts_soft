@@ -62,8 +62,8 @@ auth required pam_wheel.so use_uid
 /etc/pam.d/rlogin
 /etc/pam.d/rsh
 /etc/pam.d/shadow
-/etc/pam.d/su
-/etc/pam.d/sudo
+#/etc/pam.d/su
+#/etc/pam.d/sudo
 /etc/pam.d/useradd
 /etc/pam.d/userdel
 /etc/pam.d/usermod

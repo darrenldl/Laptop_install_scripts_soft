@@ -399,6 +399,8 @@ echo "Removing lock_p"
 rm lock_p
 echo "Removing lock"
 rm lock
+echo "Removing lock_config"
+rm lock_config
 echo "Removing pkg_install.sh"
 rm pkg_install.sh
 echo "Removing pkg_list"

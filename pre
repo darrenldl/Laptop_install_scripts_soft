@@ -213,6 +213,11 @@ echo ""
 echo "Copying lock_p to /mnt"
 echo "command: cp lock_p /mnt"
 cp lock_p /mnt
+echo ""
+echo "Copying lock_config to /mnt"
+echo "command: cp lock_config /mnt"
+cp lock_config /mnt
+echo ""
 echo "Copying unlock to /mnt"
 echo "cp unlock /mnt"
 cp unlock /mnt
